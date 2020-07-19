@@ -1,5 +1,4 @@
-.hn-container {
-    background-color: rgb(246, 246, 239);
+.hn-container {    
     margin-top: 0.5rem;
-    border: 2px solid black;
+    border: 0.125rem solid black;
 }

@@ -1,36 +1,32 @@
 <div class="news-feed-container">
-    <div class="news-feed-live-feed">
-        <table class="table table-striped">
+    <div class="news-feed-live-feed oj-flex-item">
+        <table class="table table-striped" aria-label="Hacker News Feed">
             <thead class="hr-container-header">
                 <tr class="hr-container-row"></tr>
-                <th class="th-xs" *ngFor="let header of feedHeaders; index as i">{{header.label}}</th>
+                <th scope="col" class="th-xs" [attr.aria-label]="header.label" *ngFor="let header of feedHeaders; index as i">{{header.label}}</th>
             </thead>
-            <tbody>
-                <tr *ngFor="let feed of allFeeds; index as i"
-                    [ngClass]="[feed.isHidden ? 'hide-row': 'hr-container-row']">
-                    <td>{{feed.numComments}}</td>
-                    <td>
+            <tbody class="hr-container-body">
+                <tr scope="row" *ngFor="let feed of allFeeds; index as i" [ngClass]="[feed.isHidden ? 'hide-row': 'hr-container-row']">
+                    <td [attr.aria-label]="feed.numComments" class="text-style">{{feed.numComments}}</td>
+                    <td [attr.aria-label]="feed.upVote" class="text-style">{{feed.upVote}}
+                    </td>
+                    <td aria-label="UpVote button" class="text-style">
                         <span class="glyphicon glyphicon-search votearrow" (click)="onClickVote(feed)" title="upvote">
-                            Click</span></td>
-                    <td>{{feed.upVote}}</td>
-                    <td class="title">
-                        <a href="{{feed.url}}">{{feed.title}}</a>
+                            <img width=10 src="grayarrow.png"/></span>
+                    </td>
+                    <td [attr.aria-label]="feed.title" class="text-style">
+                        <a href="{{feed.createdAtUrl}}" >{{feed.title}}</a>
                         <span class="subtext" (click)="onClickHide(feed)">[hide]</span>
                     </td>
-                </tr>               
+                </tr>
             </tbody>
         </table>
         <div class="hn-pagination">
-            <span [ngClass]="{disabled:currentPage === 0}" class="page-item first-item">
-                <a routerLink [queryParams]="{ page: currentPage - 1 }" class="page-link">Previous</a>
-            </span>
-            <span>|</span>
-            <span [ngClass]="{disabled:currentPage === totalPages - 1}" class="page-item first-item">
-                <a routerLink [queryParams]="{ page: currentPage + 1 }" class="page-link">Next</a>
-            </span>
+            <a routerLink [queryParams]="{ page: currentPage - 1 }" [class.disabled]="currentPage === 0">Previous |</a>
+            <a routerLink [queryParams]="{ page: currentPage + 1 }" [class.disabled]="currentPage === totalPages - 1">Next</a>
         </div>
     </div>
-    <div class="news-feed-live-chart">
+    <div class="news-feed-live-chart oj-flex-item">
         <app-news-chart [newsfeedData] = "allFeeds"></app-news-chart>
     </div>
 </div>

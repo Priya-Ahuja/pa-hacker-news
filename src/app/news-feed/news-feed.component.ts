@@ -1,24 +1,29 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NewsDataService } from '../news-data.service';
 import { VotesService } from '../votes.service';
-import { element } from 'protractor';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-news-feed',
   templateUrl: './news-feed.component.html',
-  styleUrls: ['./news-feed.component.css']
+  styleUrls: ['./news-feed.component.css'] 
 })
-export class NewsFeedComponent implements OnInit, OnDestroy {
+export class NewsFeedComponent implements OnInit {
   public allFeeds;
   public feedHeaders;
   public currentPage;
-  public totalPages; 
+  public totalPages;
+
+
   constructor(public httpService: NewsDataService, public votesService: VotesService, private route: ActivatedRoute) {
-    this.feedHeaders = [{ label: 'Comments' }, { label: 'Vote Count' }, { label: 'UpVote' }, { label: 'News Details' }];
+    this.feedHeaders = [
+    { label: 'Comments' },
+    { label: 'Vote Count' },
+    { label: 'UpVote' },
+    { label: 'News Details' }];
   }
 
-
+  // Initialise Data for Feeds
 
   private loadPage(page): void {
     const feedData = [];
@@ -31,35 +36,33 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
           numComments: ele.num_comments,
           title: ele.title,
           createdAtUrl: ele.url,
-          upVote: !this.getVotes(ele) ? 0 : this.getVotes(ele).voteCount,
-          isHidden: !this.getVotes(ele) ? false : this.getVotes(ele).isHidden
+          upVote: !this.getLocalData(ele) ? 0 : this.getLocalData(ele).voteCount,
+          isHidden: !this.getLocalData(ele) ? false : this.getLocalData(ele).isHidden
         });
       });
       this.currentPage = data.page;
       this.totalPages = data.nbPages;
-      this.allFeeds = feedData;      
+      this.allFeeds = feedData;
     }, error => {
       console.log('Error while retreiving feeds on front page', error);
     });
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(x => this.loadPage(x.page || 0));
+    this.route.queryParams.subscribe(x => this.loadPage(x.page || 0)); // Initialise the feeds with page 0
   }
 
-  ngOnDestroy(): void {
-  }
-
+  // On click of vote & hide, save the info in local storage
   onClickVote(value): void {
     value.upVote++;
-    this.votesService.saveVotes(value);
+    this.votesService.saveLocalData(value);
   }
   onClickHide(value): void {
     value.isHidden = true;
-    this.votesService.saveVotes(value);
+    this.votesService.saveLocalData(value);
   }
 
-  private getVotes(ele): any {
-    return this.votesService.getVotes(ele);
+  getLocalData(ele): any {
+    return this.votesService.getLocalData(ele);
   }
 }

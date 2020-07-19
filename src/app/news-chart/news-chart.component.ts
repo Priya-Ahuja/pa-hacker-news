@@ -1,7 +1,5 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { NewsDataService } from '../news-data.service';
-import { VotesService } from '../votes.service';
 import { Color, Label } from 'ng2-charts';
 
 @Component({
@@ -32,11 +30,12 @@ export class NewsChartComponent implements OnInit, OnChanges {
 
   // Define type of chart
   lineChartType = 'line';
-  constructor(public httpService: NewsDataService, public votesService: VotesService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
   ngOnChanges(): void {
+    // If newsFeed data receives the data, load the chart with correct information
     if (this.newsfeedData) {
       this.newsfeedData.forEach(element => {
         this.lineChartData[0].data.push(element.upVote);
@@ -44,5 +43,4 @@ export class NewsChartComponent implements OnInit, OnChanges {
       });
     }
   }
-
 }
