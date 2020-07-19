@@ -30,12 +30,15 @@ export class NewsChartComponent implements OnInit, OnChanges {
 
   // Define type of chart
   lineChartType = 'line';
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
   ngOnChanges(): void {
     // If newsFeed data receives the data, load the chart with correct information
+    this.lineChartData =  [{ data: [], label: 'TotalVotes' }];
+    this.lineChartLabels = [];
     if (this.newsfeedData) {
       this.newsfeedData.forEach(element => {
         this.lineChartData[0].data.push(element.upVote);
